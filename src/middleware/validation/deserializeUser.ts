@@ -41,6 +41,8 @@ const deserializeUser = async (
 
       // @ts-ignore
       req.user = decoded;
+      console.log("decoded >> " , decoded)
+      // console.log("decerialized >> " ,req.user)
     }
 
     return next();

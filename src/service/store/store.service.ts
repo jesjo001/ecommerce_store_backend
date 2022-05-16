@@ -17,31 +17,33 @@ export const findStore = async(
     query: FilterQuery<StoreDocument>,
     options: QueryOptions = { lean: true }
 ) => {
-  return Store.findOne(query, {}, options);
+  return await Store.findOne(query, {}, options);
 }
 
 export const findAllStore = async() => {
     return Store.find({});
 }
-export const countStore = (
+export const countStore = async(
   query: FilterQuery<StoreDocument>,
 ) => {
-  return Store.find(query).countDocuments({});
+  return await Store.find(query).countDocuments({});
 };
 
-export const findStores = (
+export const findStores = async(
   query: FilterQuery<StoreDocument>,
-  options: QueryOptions
+  options: QueryOptions,
+  docLimit: number,
+  skip: number
 ) => {
-  return Store.findOneAndUpdate(query, {}, options);
+  return await Store.find(query).limit(docLimit).skip(skip);
 };
 
-export const findAndUpdate = (
+export const findAndUpdate = async(
     query: FilterQuery<StoreDocument>,
     update: UpdateQuery<StoreDocument>,
     options: QueryOptions
   ) => {
-    return Store.findOneAndUpdate(query, update, options);
+    return await Store.findOneAndUpdate(query, update, options);
   };
   
   export const deleteStore = async (query: FilterQuery<StoreDocument>) => {
