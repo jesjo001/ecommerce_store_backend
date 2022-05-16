@@ -84,6 +84,7 @@ export const productImageUploadHandler = async (req: Request, res: Response) => 
       const productId = get(req, "body.productId");
 
       console.log(file)
+      console.log("productId >> ", productId)
 
       const result = await uploadFile(file)
       console.log("result >> ", result)
@@ -135,11 +136,11 @@ export const updateProductHandler = async (req: Request, res: Response) => {
         const userRole = get(req, "user.role");
         const body = req.body;
 
-        if (String(userRole) !== "admin" || String(userRole) !== "seller" ) {
+        if (String(userRole) !== "admin" && String(userRole) !== "seller" ) {
             return res.status(401).json({
                 status: 401,
                 message:
-                  "You do not have the required permissions to create a product.",
+                  "You do not have the required permissions to update this product.",
               });
         }
 
@@ -185,8 +186,8 @@ export const findProductsHandler = async (req: Request, res: Response) => {
     
       const count = await countProduct({approved:true})
 
-      const page = parseInt(get(req, "body.page")) || 1;
-      const limit = parseInt(get(req, "body.limit")) || 100;
+      const page = parseInt(get(req, "query.page")) || 1;
+      const limit = parseInt(get(req, "query.limit")) || 100;
       const skipIndex = (page - 1) * limit;
 
       const products = await findProducts({approved: true, deleted:false},{ skip:skipIndex, limit})
