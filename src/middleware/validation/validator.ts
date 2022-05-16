@@ -106,6 +106,13 @@ export const prooductValidationRule = () => {
   ];
 };
 
+export const prooductUpdateValidationRule = () => {
+  return [
+    // productId must not be empty
+    body("productId").not().isEmpty(),
+  ];
+};
+
 export const counsellorValidationRules = () => {
   return [
     // username must not be empty
