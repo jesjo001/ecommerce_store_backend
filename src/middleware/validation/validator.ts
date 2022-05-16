@@ -79,12 +79,8 @@ export const cartItemsValidationRules = () => {
     body("productName").not().isEmpty(),
     // itemPrice is required
     body("itemPrice").not().isEmpty(),
-    // isbn is required
-    body("isbn").not().isEmpty(),
     // productId is required
     body("productId").not().isEmpty(),
-    // productImg is required
-    body("productImg").not().isEmpty(),
     // quantity is required
     body("quantity").isNumeric(),    
     // shippingStatus is required

@@ -74,11 +74,12 @@ export const getCartHandler = async (req: Request, res: Response) => {
 
 
   export const incrementCartItemHandler = async (req: Request, res: Response) => {
+    
     try {
       const productId = get(req, "body.productId");
       const userId = get(req, "user._id");
   
-      const cart = await findAndUpdate({ userId, "cartItems.productId": productId }, {$inc:{"cartItems.$.quantity":1}}, { new:true });
+      const cart = await findAndUpdate({ userId, "cartItems.$.productId": productId }, {$inc:{"cartItems.$.quantity":1}}, { new:true });
   
       if (!cart) return res.status(404).json({
           status: 404,
@@ -105,7 +106,7 @@ export const getCartHandler = async (req: Request, res: Response) => {
       const productId = get(req, "body.productId");
       const userId = get(req, "user._id");
   
-      const cart = await findAndUpdate({ userId, "cartItems.productId": productId }, {$inc:{"cartItems.$.quantity":-1}}, { new:true });
+      const cart = await findAndUpdate({ userId, "cartItems.$.productId": productId }, {$inc:{"cartItems.$.quantity":-1}}, { new:true });
   
       if (!cart) return res.status(404).json({
           status: 404,
@@ -159,10 +160,20 @@ export const getCartHandler = async (req: Request, res: Response) => {
       const productId = get(req, "body.productId");
       const update = req.body;
       const userId = get(req, "user._id");
+      const user = get(req, "user");
   
       const cart = await findCart({ userId });
       
       if (!cart){
+
+        const newCart = await createCart({
+          userName: user.username,
+          userId,
+          cartItems: []
+        })
+
+        if(update.quantity === undefined ) update.quantity = 1
+
         const newCartItem = await findAndUpdate({userId},{ $push : { cartItems: update }}, { new: true, upsert: true })
           
         return res.status(200).json({
@@ -171,13 +182,39 @@ export const getCartHandler = async (req: Request, res: Response) => {
         });
       }
 
-      const product = cart.cartItems.map((item, index) => {
+      if(cart.cartItems.length === 0){
+        if(update.quantity === undefined ) update.quantity = 1
+
+        const newCartItem = await findAndUpdate({userId},{ $push : { cartItems: update }}, { new: true, upsert: true })
+        return res.status(200).json({
+          status: 200,
+          cart: newCartItem,
+        });
+      }
+
+      const product = cart.cartItems.filter((item, index) => {
           return item.productId === productId;
       })
 
+      if(product.length === 0){
+        const newCartItem = await findAndUpdate({userId},{ $push : { cartItems: update }}, { new: true, upsert: true })
+        return res.status(200).json({
+          status: 200,
+          cart: newCartItem,
+        });
+      }
+
+      if(product.length > 0){
+        if(update.quantity === undefined ) update.quantity = product[0].quantity++;
+      }
+      
+      if(update.quantity !== undefined ) {
+        
+      }
+
       const updatedCart = await findAndUpdate(
           { userId, "cartItems.productId": productId }, 
-          {$inc:{"cartItems.$.quantity":1}}, 
+          {$set:{"cartItems.$.quantity": update.quantity}}, 
           { new:true }
       );
   

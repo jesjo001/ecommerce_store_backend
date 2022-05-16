@@ -23,7 +23,7 @@ const CartRouter = express.Router();
 CartRouter.use(requiresUser)
 CartRouter.post("/create", cartValidationRules(), validate, createCartHandler)
 CartRouter.get("/get", getCartHandler)
-CartRouter.post("/increament", incrementCartItemHandler)
+CartRouter.post("/increment", incrementCartItemHandler)
 CartRouter.post("/decrement", decrementCartItemHandler)
 CartRouter.post("/clear", clearCartItemsHandler)
 CartRouter.post("/addtocart", cartItemsValidationRules(), validate, addToCartHandler)
