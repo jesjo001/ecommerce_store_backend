@@ -15,12 +15,12 @@ import {
 
 const StoreRouter = express.Router();
 
-StoreRouter.get("/get", findStoreHandler)
-StoreRouter.get("/get/all", findAllStoreHandler)
+StoreRouter.get("/get/:id", findStoreHandler)
+StoreRouter.get("/get", findAllStoreHandler)
 
 StoreRouter.use(requiresUser);
 StoreRouter.post("/create", storeValidationRules(), validate, createStoreHandler)
-StoreRouter.post("/update", updateStoreHandler)
-StoreRouter.post("/delete", deleteStoreHandler)
+StoreRouter.post("/update", storeValidationRules(), validate, updateStoreHandler)
+StoreRouter.post("/delete/:id", deleteStoreHandler)
 
 export default StoreRouter;

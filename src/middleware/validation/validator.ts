@@ -1,5 +1,5 @@
 import { body, validationResult } from "express-validator";
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export const userValidationRules = () => {
   return [
@@ -9,8 +9,8 @@ export const userValidationRules = () => {
     body("firstName").not().isEmpty(),
     // lastName is required
     body("lastName").not().isEmpty(),
-    // role is required
-    body("role").not().isEmpty(),
+    // phoneNum is required
+    body("phoneNum").not().isEmpty(),
     //validation email
     body("email").isEmail(),
     // password must be at least 5 chars long
@@ -100,10 +100,6 @@ export const prooductValidationRule = () => {
     body("price").not().isEmpty(),
     // amount is required
     body("amount").not().isEmpty(),
-    // image is required
-    body("image").not().isEmpty(),
-    // sellerId is required
-    body("sellerId").not().isEmpty(),
     //validation description
     body("description").not().isEmpty(),
     // password must be at least 5 chars long

@@ -44,6 +44,9 @@ export const createUserHandler = async (req: Request, res: Response) => {
         message: " User with same email / username / phone already exists",
       });
     }
+    
+    const newUser = req.body;
+    newUser.role = 'buyer';
 
     const user = await createUser(req.body);
     return res.send(omit(user.toJSON(), "password"));

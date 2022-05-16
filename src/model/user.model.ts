@@ -8,6 +8,7 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   address: string;
+  phoneNum: string;
   city: string;
   country: string;
   role: string;
@@ -33,6 +34,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNum: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: false,
@@ -51,7 +56,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
+      required: false,
       enum: USER_TYPE,
     },
     token: {

@@ -18,6 +18,7 @@ const app = express();
 app.use(deserializeUser);
 
 //middleware
+// app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

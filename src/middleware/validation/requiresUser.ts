@@ -9,12 +9,12 @@ const requiresUser = async (
   const user = get(req, "user");
 
   if (!user) {
-    return res.sendStatus(403);
+    // return res.sendStatus(403);
 
-    // return res.status(403).json({ 
-    //   status: 40,
-    //   message: "User does not exist"
-    // });
+    return res.status(403).json({ 
+      status: 403,
+      message: "User does not exist"
+    });
   }
 
   return next();

@@ -13,7 +13,9 @@ import {
   updateProductHandler,
   findSingleProductHandler,
   findProductsHandler,
-  deleteProductHandler
+  deleteProductHandler,
+  productImageUploadHandler,
+  getImageHandler
 } from "../../controller/product.controller";
 
 const upload = multer({ dest: 'uploads/'})
@@ -21,7 +23,9 @@ const upload = multer({ dest: 'uploads/'})
 const ProductRouter = express.Router();
 
 ProductRouter.use(requiresUser)
-ProductRouter.post("/create", prooductValidationRule(), validate, upload.single('image'), createProductHandler);
+ProductRouter.post("/create", prooductValidationRule(), validate, createProductHandler);
+ProductRouter.post("/upload", upload.single('image'), productImageUploadHandler);
+ProductRouter.get("/images/:key", getImageHandler);
 ProductRouter.post("/update", prooductValidationRule(), validate, updateProductHandler);
 ProductRouter.get("/get/:id", findSingleProductHandler );
 ProductRouter.get("/get", findProductsHandler);

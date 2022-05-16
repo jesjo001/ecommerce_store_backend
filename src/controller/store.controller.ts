@@ -39,7 +39,38 @@ export const createStoreHandler = async (req: Request, res: Response) => {
 export const updateStoreHandler = async (req: Request, res: Response) => {
 
     try {
-        
+      const userId = get(req, "user._id");
+      const storeId = get(req, "body.id");
+      const userRole = get(req, "user.role");
+      const body = req.body;
+
+      delete body.approved
+      delete body.deleted
+      delete body.userId
+
+      const store = await findStore({ _id: storeId, deleted: false });
+
+      if(!store)return res.status(401).json({
+        status: 401,
+        message:
+          "Store not found.",
+      });
+
+      if (String(userId) !== String(store.userId) ) {
+        if(String(userRole) !== "admin") return res.status(401).json({
+            status: 401,
+            message:
+              "You do not have the required permissions to updatethe store details.",
+          });
+      }
+
+      const newStore = await findAndUpdate({ _id: storeId }, { ...body },{new: true});
+      
+      return res.status(201).json({
+        status: 201,
+        store: newStore
+      });
+      
         
     } catch (err) {
         log.error(err);
@@ -82,11 +113,13 @@ export const findAllStoreHandler = async (req: Request, res: Response) => {
     try {
       const count = await countStore({approved:true})
 
-      const page = parseInt(get(req, "body.page")) || 1;
-      const limit = parseInt(get(req, "body.limit")) || 100;
+      const page = parseInt(get(req, "query.page")) || 1;
+      const limit = parseInt(get(req, "query.limit")) || 100;
       const skipIndex = (page - 1) * limit;
 
-      const store = await findStores({approved: true, deleted:false},{ skip:skipIndex, limit})
+      console.log("page >> ", page)
+
+      const store = await findStores({approved: true, deleted:false},{}, limit, skipIndex)
 
       return res.status(201).json({
         status: 201,
